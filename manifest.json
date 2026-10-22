@@ -11,8 +11,8 @@
   "background_color": "#fbf6ee",
   "theme_color": "#e07a3f",
   "icons": [
-    { "src": "/CalendarioComidasPedi-trico/iconos/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/CalendarioComidasPedi-trico/iconos/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "/CalendarioComidasPedi-trico/iconos/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "/CalendarioComidasPedi-trico/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/CalendarioComidasPedi-trico/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/CalendarioComidasPedi-trico/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
