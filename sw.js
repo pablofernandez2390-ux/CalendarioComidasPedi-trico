@@ -1,6 +1,6 @@
 // Service worker del Calendario de comidas.
 // Su alcance es solo la carpeta donde está este archivo (el repositorio de la app).
-const CACHE = 'calendario-comidas-v1';
+const CACHE = 'calendario-comidas-v2';
 const ARCHIVOS = ['./', 'index.html', 'manifest.json', 'iconos/icon-192.png', 'iconos/icon-512.png'];
 
 self.addEventListener('install', e => {

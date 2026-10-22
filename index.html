@@ -26,7 +26,10 @@ h3{font-size:1.05rem}
 .fecha{font-size:1.2rem;font-weight:700}
 .alerta{background:#fdeaea;border:1px solid #f0c3bc;color:#8a2f22;border-radius:10px;padding:8px 10px;margin-top:8px;font-size:.9rem}
 .slot{display:flex;flex-direction:column;gap:8px}
-.slot .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.slot .top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.thumb{flex:none;cursor:pointer}
+.emo{display:flex;align-items:center;justify-content:center;background:var(--soft);border:1px solid var(--line);border-radius:12px;line-height:1;text-align:center}
+a.btn{display:inline-block;text-decoration:none;border-radius:10px;padding:9px 14px;background:#efe4d3;color:var(--ink);font-weight:600}
 .slot .nom{font-weight:700;font-size:1.05rem}
 .slot .hora{color:var(--mut);font-size:.85rem}
 .chk{display:flex;align-items:center;gap:10px;font-size:1.1rem;font-weight:600;padding:8px 12px;background:var(--soft);border-radius:12px;cursor:pointer}
@@ -94,35 +97,35 @@ const fechaHora=d=>`${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()
 
 /* ---------- Recetas básicas sugeridas ---------- */
 const SUG=[
-{n:'Leche con cacao y tostadas con queso',t:['desayuno','merienda'],i:'Leche, cacao en polvo, pan, queso',p:'Calentar la leche y mezclar con el cacao. Tostar el pan y colocar el queso.',ini:1},
-{n:'Avena cocida con manzana y canela',t:['desayuno'],i:'Avena, leche, manzana, canela',p:'Cocinar la avena en la leche unos 5 minutos. Agregar manzana rallada y una pizca de canela.',ini:1},
-{n:'Yogur con fruta y cereal sin azúcar agregada',t:['desayuno','merienda'],i:'Yogur natural, fruta de estación, cereal de avena o maíz sin azúcar',p:'Servir el yogur con la fruta en trozos y el cereal por encima.',ini:1},
-{n:'Tostada con huevo revuelto y fruta',t:['desayuno'],i:'Pan, huevo, aceite o manteca, fruta',p:'Revolver el huevo en la sartén hasta que cuaje bien. Servir sobre la tostada, con fruta al lado.',ini:1},
-{n:'Pan con ricota y banana',t:['desayuno','merienda'],i:'Pan, ricota, banana',p:'Untar el pan con ricota y agregar rodajas de banana.'},
-{n:'Fruta de estación y vaso de leche',t:['merienda'],i:'Fruta de estación, leche',p:'Cortar la fruta en trozos adecuados a la edad y servir con la leche.',ini:1},
-{n:'Licuado de banana y leche',t:['merienda'],i:'Banana, leche',p:'Licuar la banana con la leche bien fría. Sin azúcar agregada.',ini:1},
-{n:'Sándwich de queso y tomate',t:['merienda'],i:'Pan, queso, tomate',p:'Armar el sándwich con queso y rodajas finas de tomate.',ini:1},
-{n:'Budín de banana casero',t:['merienda'],i:'Bananas maduras, harina, huevo, aceite, polvo de hornear',p:'Pisar las bananas, mezclar con los demás ingredientes y hornear unos 40 minutos a 180 °C.'},
-{n:'Galletas de avena caseras',t:['merienda'],i:'Avena, banana, canela, pasas de uva opcional',p:'Pisar la banana, mezclar con la avena, formar galletas y hornear 15 minutos a 180 °C.'},
-{n:'Milanesa de pollo al horno con puré',t:['almuerzo','cena'],i:'Pechuga de pollo, huevo, pan rallado, papa, leche',p:'Pasar el pollo por huevo y pan rallado, hornear con un poco de aceite hasta dorar. Acompañar con puré de papa.',ini:1},
-{n:'Guiso de lentejas con verduras',t:['almuerzo'],i:'Lentejas, zanahoria, zapallo, cebolla, papa, caldo',p:'Cocinar las lentejas con las verduras en cubos pequeños hasta que todo esté blando.',ini:1},
-{n:'Arroz con pollo y zanahoria',t:['almuerzo','cena'],i:'Arroz, pollo, zanahoria, cebolla, morrón',p:'Rehogar la cebolla, agregar el pollo en trozos, las verduras y el arroz con agua o caldo. Cocinar tapado.',ini:1},
-{n:'Fideos con salsa de tomate casera y queso',t:['almuerzo','cena'],i:'Fideos, tomate, cebolla, zanahoria, queso rallado',p:'Hacer la salsa con tomate, cebolla y zanahoria rallada. Mezclar con los fideos y queso.',ini:1},
-{n:'Tortilla de papa y zanahoria con ensalada',t:['almuerzo','cena'],i:'Papa, zanahoria, huevos, cebolla, ensalada',p:'Cocinar las verduras en cubos, mezclar con huevo batido y cuajar en la sartén por ambos lados.',ini:1},
-{n:'Pescado al horno con puré y brócoli',t:['almuerzo','cena'],i:'Filet de merluza, papa, brócoli, limón',p:'Hornear el filet con unas gotas de limón. Hervir el brócoli y la papa para el puré. Revisar que no queden espinas.'},
-{n:'Pastel de carne y calabaza',t:['almuerzo','cena'],i:'Carne picada, cebolla, calabaza, papa',p:'Cocinar la carne con cebolla, cubrir con puré de calabaza y papa, gratinar al horno.'},
-{n:'Albóndigas con puré de calabaza',t:['almuerzo','cena'],i:'Carne picada, huevo, pan rallado, calabaza',p:'Formar albóndigas y cocinarlas en salsa de tomate o al horno. Servir con puré de calabaza.'},
-{n:'Tarta de zapallitos y queso',t:['almuerzo','cena'],i:'Masa de tarta, zapallitos, queso, huevos, cebolla',p:'Rehogar los zapallitos, mezclar con huevo y queso, y hornear sobre la masa.'},
-{n:'Hamburguesa casera de lentejas con ensalada',t:['almuerzo','cena'],i:'Lentejas cocidas, avena, huevo, zanahoria rallada',p:'Pisar las lentejas, mezclar con los demás ingredientes, formar hamburguesas y dorar en sartén u horno.'},
-{n:'Sopa de verduras con fideos',t:['cena'],i:'Zanahoria, zapallo, puerro, papa, fideos chicos',p:'Hervir las verduras en trozos pequeños, agregar los fideos al final.',ini:1},
-{n:'Omelette de verduras con arroz',t:['cena'],i:'Huevos, espinaca o zapallito, queso, arroz',p:'Batir los huevos, agregar verduras cocidas y queso, cuajar en la sartén. Acompañar con arroz.',ini:1},
-{n:'Pollo al horno con boniato',t:['cena'],i:'Muslos o suprema de pollo, boniato, aceite',p:'Hornear el pollo con el boniato en cubos hasta que todo esté tierno y bien cocido.',ini:1},
-{n:'Pizza casera de masa fina con verduras',t:['cena'],i:'Harina, levadura, tomate, queso, verduras',p:'Estirar la masa, cubrir con salsa, queso y verduras en trozos finos, y hornear.'}
+{n:'Leche con cacao y tostadas con queso',e:'🥛🍞',t:['desayuno','merienda'],i:'Leche, cacao en polvo, pan, queso',p:'Calentar la leche y mezclar con el cacao. Tostar el pan y colocar el queso.',ini:1},
+{n:'Avena cocida con manzana y canela',e:'🥣🍎',t:['desayuno'],i:'Avena, leche, manzana, canela',p:'Cocinar la avena en la leche unos 5 minutos. Agregar manzana rallada y una pizca de canela.',ini:1},
+{n:'Yogur con fruta y cereal sin azúcar agregada',e:'🥣🍓',t:['desayuno','merienda'],i:'Yogur natural, fruta de estación, cereal de avena o maíz sin azúcar',p:'Servir el yogur con la fruta en trozos y el cereal por encima.',ini:1},
+{n:'Tostada con huevo revuelto y fruta',e:'🍳🍞',t:['desayuno'],i:'Pan, huevo, aceite o manteca, fruta',p:'Revolver el huevo en la sartén hasta que cuaje bien. Servir sobre la tostada, con fruta al lado.',ini:1},
+{n:'Pan con ricota y banana',e:'🍞🍌',t:['desayuno','merienda'],i:'Pan, ricota, banana',p:'Untar el pan con ricota y agregar rodajas de banana.'},
+{n:'Fruta de estación y vaso de leche',e:'🍎🥛',t:['merienda'],i:'Fruta de estación, leche',p:'Cortar la fruta en trozos adecuados a la edad y servir con la leche.',ini:1},
+{n:'Licuado de banana y leche',e:'🥤🍌',t:['merienda'],i:'Banana, leche',p:'Licuar la banana con la leche bien fría. Sin azúcar agregada.',ini:1},
+{n:'Sándwich de queso y tomate',e:'🥪',t:['merienda'],i:'Pan, queso, tomate',p:'Armar el sándwich con queso y rodajas finas de tomate.',ini:1},
+{n:'Budín de banana casero',e:'🍰',t:['merienda'],i:'Bananas maduras, harina, huevo, aceite, polvo de hornear',p:'Pisar las bananas, mezclar con los demás ingredientes y hornear unos 40 minutos a 180 °C.'},
+{n:'Galletas de avena caseras',e:'🍪',t:['merienda'],i:'Avena, banana, canela, pasas de uva opcional',p:'Pisar la banana, mezclar con la avena, formar galletas y hornear 15 minutos a 180 °C.'},
+{n:'Milanesa de pollo al horno con puré',e:'🍗🥔',t:['almuerzo','cena'],i:'Pechuga de pollo, huevo, pan rallado, papa, leche',p:'Pasar el pollo por huevo y pan rallado, hornear con un poco de aceite hasta dorar. Acompañar con puré de papa.',ini:1},
+{n:'Guiso de lentejas con verduras',e:'🍲',t:['almuerzo'],i:'Lentejas, zanahoria, zapallo, cebolla, papa, caldo',p:'Cocinar las lentejas con las verduras en cubos pequeños hasta que todo esté blando.',ini:1},
+{n:'Arroz con pollo y zanahoria',e:'🍚🍗',t:['almuerzo','cena'],i:'Arroz, pollo, zanahoria, cebolla, morrón',p:'Rehogar la cebolla, agregar el pollo en trozos, las verduras y el arroz con agua o caldo. Cocinar tapado.',ini:1},
+{n:'Fideos con salsa de tomate casera y queso',e:'🍝',t:['almuerzo','cena'],i:'Fideos, tomate, cebolla, zanahoria, queso rallado',p:'Hacer la salsa con tomate, cebolla y zanahoria rallada. Mezclar con los fideos y queso.',ini:1},
+{n:'Tortilla de papa y zanahoria con ensalada',e:'🍳🥔',t:['almuerzo','cena'],i:'Papa, zanahoria, huevos, cebolla, ensalada',p:'Cocinar las verduras en cubos, mezclar con huevo batido y cuajar en la sartén por ambos lados.',ini:1},
+{n:'Pescado al horno con puré y brócoli',e:'🐟🥦',t:['almuerzo','cena'],i:'Filet de merluza, papa, brócoli, limón',p:'Hornear el filet con unas gotas de limón. Hervir el brócoli y la papa para el puré. Revisar que no queden espinas.'},
+{n:'Pastel de carne y calabaza',e:'🥧',t:['almuerzo','cena'],i:'Carne picada, cebolla, calabaza, papa',p:'Cocinar la carne con cebolla, cubrir con puré de calabaza y papa, gratinar al horno.'},
+{n:'Albóndigas con puré de calabaza',e:'🧆',t:['almuerzo','cena'],i:'Carne picada, huevo, pan rallado, calabaza',p:'Formar albóndigas y cocinarlas en salsa de tomate o al horno. Servir con puré de calabaza.'},
+{n:'Tarta de zapallitos y queso',e:'🥧🥒',t:['almuerzo','cena'],i:'Masa de tarta, zapallitos, queso, huevos, cebolla',p:'Rehogar los zapallitos, mezclar con huevo y queso, y hornear sobre la masa.'},
+{n:'Hamburguesa casera de lentejas con ensalada',e:'🍔',t:['almuerzo','cena'],i:'Lentejas cocidas, avena, huevo, zanahoria rallada',p:'Pisar las lentejas, mezclar con los demás ingredientes, formar hamburguesas y dorar en sartén u horno.'},
+{n:'Sopa de verduras con fideos',e:'🥣🥕',t:['cena'],i:'Zanahoria, zapallo, puerro, papa, fideos chicos',p:'Hervir las verduras en trozos pequeños, agregar los fideos al final.',ini:1},
+{n:'Omelette de verduras con arroz',e:'🍳🥬',t:['cena'],i:'Huevos, espinaca o zapallito, queso, arroz',p:'Batir los huevos, agregar verduras cocidas y queso, cuajar en la sartén. Acompañar con arroz.',ini:1},
+{n:'Pollo al horno con boniato',e:'🍗🍠',t:['cena'],i:'Muslos o suprema de pollo, boniato, aceite',p:'Hornear el pollo con el boniato en cubos hasta que todo esté tierno y bien cocido.',ini:1},
+{n:'Pizza casera de masa fina con verduras',e:'🍕',t:['cena'],i:'Harina, levadura, tomate, queso, verduras',p:'Estirar la masa, cubrir con salsa, queso y verduras en trozos finos, y hornear.'}
 ];
 
 /* ---------- Estado ---------- */
 let S, vista='hoy', cal=null, selDia=null;
-function deSug(x){return {id:uid(),n:x.n,t:[...x.t],i:x.i,p:x.p}}
+function deSug(x){return {id:uid(),n:x.n,e:x.e,t:[...x.t],i:x.i,p:x.p}}
 function generar(s){
   const off={desayuno:0,almuerzo:0,merienda:1,cena:3};
   SLOTS.forEach(sl=>{
@@ -146,7 +149,7 @@ function load(){
   try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){}
   return s;
 }
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));return true;}catch(e){if(!save._w){save._w=1;alert('No se pudo guardar: el navegador se quedó sin espacio. Probá con fotos más chicas o exportá una copia.');}return false;}}
 
 /* ---------- Lógica de comidas ---------- */
 const meal=id=>S.rep.find(r=>r.id===id);
@@ -208,6 +211,35 @@ function setPlan(d,sl,v){S.plan[d][sl]=v;save();}
 function regenerar(){if(confirm('¿Rearmar la semana automáticamente con tu repertorio? Se reemplaza el plan semanal actual (los registros no se tocan).')){generar(S);S.over={};save();render();}}
 function ir(v){vista=v;render();window.scrollTo(0,0);}
 
+/* ---------- Imágenes de referencia ---------- */
+const emo=m=>m.e||((SUG.find(x=>x.n===m.n)||{}).e)||'🍽️';
+function thumb(m,px){
+  const st=`width:${px}px;height:${px}px`;
+  const inner=m.img?`<img src="${m.img}" alt="" style="${st};object-fit:cover;border-radius:12px;display:block">`:`<div class="emo" style="${st};font-size:${Math.round(px*.42)}px">${emo(m)}</div>`;
+  return `<div class="thumb" onclick="verPlato('${m.id}')" role="button" aria-label="Ver ${esc(m.n)}">${inner}</div>`;
+}
+function verPlato(id){
+  const m=meal(id);if(!m)return;
+  const big=m.img?`<img src="${m.img}" alt="${esc(m.n)}" style="width:100%;max-height:60vh;object-fit:contain;border-radius:12px;background:#f3ebdd">`:`<div class="emo" style="width:100%;height:150px;font-size:70px">${emo(m)}</div>`;
+  $m(`<div class="box"><h3>${esc(m.n)}</h3>${big}
+    <div class="mut" style="margin-top:8px"><b>Ingredientes:</b> ${esc(m.i)}</div>${m.p?`<div class="mut" style="margin-top:4px"><b>Preparación:</b> ${esc(m.p)}</div>`:''}
+    <div class="btns"><a class="btn" href="https://www.google.com/search?tbm=isch&q=${encodeURIComponent(m.n)}" target="_blank" rel="noopener">Buscar fotos en internet</a><button class="sec" onclick="abrirForm('${id}')">${m.img?'Cambiar mi foto':'Agregar mi foto'}</button><button onclick="$m('')">Cerrar</button></div></div>`);
+}
+let fotoTmp='';
+function prevFoto(){
+  document.getElementById('f_prev').innerHTML=fotoTmp?`<img src="${fotoTmp}" alt="" style="max-width:100%;max-height:200px;border-radius:12px"><div class="btns"><button class="del sm" type="button" onclick="fotoTmp='';prevFoto()">Quitar foto</button></div>`:'<span class="mut">Sin foto propia: se muestra el ícono.</span>';
+}
+function fotoElegida(inp){
+  const f=inp.files[0];if(!f)return;const fr=new FileReader();
+  fr.onload=()=>{const im=new Image();im.onload=()=>{
+    const M=480,k=Math.min(1,M/Math.max(im.width,im.height)),c=document.createElement('canvas');
+    c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);
+    c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+    fotoTmp=c.toDataURL('image/jpeg',0.75);prevFoto();};
+    im.onerror=()=>alert('No se pudo leer esa imagen.');im.src=fr.result;};
+  fr.readAsDataURL(f);
+}
+
 /* ---------- Vistas ---------- */
 const V={};
 function cardSlot(d,i,now){
@@ -225,7 +257,7 @@ function cardSlot(d,i,now){
   const w2=alerg(m);
   const sel=(st!=='pasado'&&!(rec&&rec.comio))?`<select onchange="cambiar('${k}','${s.k}',this.value)">${opts(s.k,id)}</select>`:'';
   return `<div class="card slot ${st==='activo'?'act':''} ${st==='pasado'?'pas':''}">
-    <div class="top"><div><div class="hora">${s.e} ${s.n} · ${hh}</div><div class="nom">${nombre?esc(nombre):'<span class="pend">Sin comida programada</span>'}</div></div>${ctrl}</div>
+    <div class="top"><div style="display:flex;gap:10px;align-items:center">${m?thumb(m,60):''}<div><div class="hora">${s.e} ${s.n} · ${hh}</div><div class="nom">${nombre?esc(nombre):'<span class="pend">Sin comida programada</span>'}</div></div></div>${ctrl}</div>
     ${m&&st!=='pasado'?`<div class="mut">${esc(m.i)}</div>`:''}
     ${w2.length?`<div class="warn">⚠ Contiene: ${esc(w2.join(', '))} (alergia/intolerancia anotada)</div>`:''}
     ${sel}</div>`;
@@ -257,15 +289,16 @@ V.repertorio=function(){
   if(!S.rep.length)h+='<p class="mut">Todavía no hay comidas. Agregá una o elegí de las sugeridas.</p>';
   S.rep.forEach(r=>{
     const w=alerg(r);
-    h+=`<div class="card"><b>${esc(r.n)}</b><div>${r.t.map(t=>`<span class="chip">${esc(cap(t))}</span>`).join('')}</div>
+    h+=`<div class="card"><div style="display:flex;gap:12px;align-items:flex-start">${thumb(r,72)}<div style="min-width:0"><b>${esc(r.n)}</b><div>${r.t.map(t=>`<span class="chip">${esc(cap(t))}</span>`).join('')}</div>
       <div class="mut">${esc(r.i)}</div>${r.p?`<div class="mut">${esc(r.p)}</div>`:''}
       ${w.length?`<div class="warn">⚠ Contiene: ${esc(w.join(', '))}</div>`:''}
+      </div></div>
       <div class="btns"><button class="sec sm" onclick="abrirForm('${r.id}')">Editar</button><button class="del sm" onclick="borrarItem('${r.id}')">Quitar</button></div></div>`;
   });
   const faltan=SUG.filter(x=>!S.rep.some(r=>r.n===x.n));
   h+=`<details class="card" ${faltan.length?'':'hidden'}><summary>Recetas básicas sugeridas (${faltan.length})</summary>
     <p class="mut">Adaptá texturas, porciones y cortes a la edad. Consultá con el pediatra sobre alérgenos, la miel (no antes de los 12 meses) y alimentos que pueden causar atragantamiento (frutos secos enteros, uvas enteras, etc.).</p>`;
-  faltan.forEach(x=>{const ix=SUG.indexOf(x);h+=`<div style="border-top:1px solid var(--line);padding:8px 0"><b>${esc(x.n)}</b><div>${x.t.map(t=>`<span class="chip">${esc(cap(t))}</span>`).join('')}</div><div class="mut">${esc(x.i)}</div><button class="sec sm" onclick="agregarSug(${ix})">Agregar al repertorio</button></div>`;});
+  faltan.forEach(x=>{const ix=SUG.indexOf(x);h+=`<div style="border-top:1px solid var(--line);padding:8px 0"><b>${x.e} ${esc(x.n)}</b><div>${x.t.map(t=>`<span class="chip">${esc(cap(t))}</span>`).join('')}</div><div class="mut">${esc(x.i)}</div><button class="sec sm" onclick="agregarSug(${ix})">Agregar al repertorio</button></div>`;});
   h+='</details>';
   return h;
 };
@@ -278,20 +311,24 @@ function borrarItem(id){
   save();render();
 }
 function abrirForm(id){
-  const r=id?meal(id):{n:'',t:[],i:'',p:''};
+  const r=id?meal(id):{n:'',t:[],i:'',p:'',e:'',img:''};
+  fotoTmp=r.img||'';
   $m(`<div class="box"><h3>${id?'Editar comida':'Nueva comida'}</h3>
     <label class="f">Nombre</label><input id="f_n" value="${esc(r.n)}">
     <label class="f">Para qué comidas sirve</label><div class="tipos">${SLOTS.map(s=>`<label><input type="checkbox" class="f_t" value="${s.k}" ${r.t.includes(s.k)?'checked':''}> ${s.n}</label>`).join('')}</div>
+    <label class="f">Ícono (emoji, opcional)</label><input id="f_e" maxlength="8" value="${esc(id?emo(r):'')}">
+    <label class="f">Foto de referencia (de la galería o sacada ahora)</label><input type="file" accept="image/*" onchange="fotoElegida(this)"><div id="f_prev" style="margin-top:6px"></div>
     <label class="f">Ingredientes</label><textarea id="f_i">${esc(r.i)}</textarea>
     <label class="f">Preparación / notas</label><textarea id="f_p">${esc(r.p)}</textarea>
     <div class="btns"><button onclick="guardarItem('${id||''}')">Guardar</button><button class="sec" onclick="$m('')">Cancelar</button></div></div>`);
+  prevFoto();
 }
 function guardarItem(id){
   const n=document.getElementById('f_n').value.trim();
   const t=[...document.querySelectorAll('.f_t:checked')].map(x=>x.value);
   if(!n){alert('Poné un nombre.');return;}
   if(!t.length){alert('Elegí al menos una comida (desayuno, almuerzo, etc.).');return;}
-  const o={n,t,i:document.getElementById('f_i').value.trim(),p:document.getElementById('f_p').value.trim()};
+  const o={n,t,e:document.getElementById('f_e').value.trim(),img:fotoTmp,i:document.getElementById('f_i').value.trim(),p:document.getElementById('f_p').value.trim()};
   if(id){Object.assign(meal(id),o);}else S.rep.push(Object.assign({id:uid()},o));
   save();$m('');render();
 }
