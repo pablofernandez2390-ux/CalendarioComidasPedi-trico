@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#e07a3f">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="iconos/icon-192.png">
+<link rel="apple-touch-icon" href="iconos/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Comidas">
 <title>Calendario de comidas</title>
 <style>
 :root{--bg:#fbf6ee;--card:#fff;--ink:#2d2a26;--mut:#7a7268;--acc:#e07a3f;--ok:#3f8f6b;--bad:#c4513f;--line:#eadfce;--soft:#fdf0e1}
@@ -371,6 +377,7 @@ V.nino=function(){
     <p class="mut">La casilla “Ha comido” está disponible desde la hora de la comida hasta que empieza la siguiente (la cena, hasta medianoche). Después queda fija.</p>
   </div><div class="card"><h3>Datos en este navegador</h3>
     <p class="mut">Todo se guarda solo en este navegador. Si cambiás de teléfono o borrás los datos del navegador, se pierde: hacé copias de vez en cuando.</p>
+    ${instalarEv?`<div class="btns"><button onclick="instalarApp()">Instalar app en este dispositivo</button></div>`:''}
     <div class="btns"><button class="sec" onclick="expCopia()">Exportar copia (.json)</button><button class="sec" onclick="document.getElementById('imp').click()">Importar copia</button><button class="del" onclick="borrarTodo()">Borrar todo</button></div>
     <input type="file" id="imp" accept=".json,application/json" hidden onchange="impCopia(this)"></div>`;
   return h;
@@ -441,6 +448,13 @@ function exportarPDF(){
   });
   bajar('registro-comidas-'+ymd(now)+'.pdf',crearPDF(items));
 }
+
+/* ---------- Instalación (PWA) ---------- */
+let instalarEv=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();instalarEv=e;if(vista==='nino')render();});
+window.addEventListener('appinstalled',()=>{instalarEv=null;if(vista==='nino')render();});
+function instalarApp(){if(!instalarEv)return;instalarEv.prompt();instalarEv.userChoice.finally(()=>{instalarEv=null;render();});}
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js',{scope:'./'}).catch(()=>{});});}
 
 /* ---------- Render ---------- */
 function render(){
