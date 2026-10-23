@@ -41,7 +41,7 @@ a.btn{display:inline-block;text-decoration:none;border-radius:10px;padding:9px 1
 .pas{opacity:.92}
 select,input,textarea{font:inherit;padding:8px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);width:100%}
 textarea{min-height:64px;resize:vertical}
-input[type=checkbox]{width:auto}
+input[type=checkbox],input[type=radio]{width:auto}
 label.row{display:flex;gap:8px;align-items:center;justify-content:space-between;margin:6px 0}
 label.row>span{min-width:110px}
 label.f{display:block;margin:10px 0 2px;font-size:.88rem;color:var(--mut)}
@@ -206,6 +206,28 @@ function marcar(k,sl){
   else S.reg[k][sl]={comio:true,plato:nombrePlan(d,sl),ts:Date.now()};
   save();render();
 }
+function editarReg(k,sl){
+  const i=SLOTS.findIndex(x=>x.k===sl),d=parse(k),s=SLOTS[i];
+  if(estado(d,i,new Date())!=='pasado')return;
+  const r=S.reg[k]&&S.reg[k][sl],comio=r?r.comio:true,plato=r?r.plato:nombrePlan(d,sl),nota=(r&&r.nota)||'';
+  $m(`<div class="box"><h3>Editar ${s.e} ${s.n}</h3><div class="mut">${fechaLarga(d)}</div>
+    <label class="f">¿Comió?</label>
+    <div class="tipos"><label><input type="radio" name="e_c" value="1" ${comio?'checked':''}> Comió</label><label><input type="radio" name="e_c" value="0" ${comio?'':'checked'}> No comió</label></div>
+    <label class="f">Qué comió / qué se ofreció (podés elegir del repertorio o escribir)</label>
+    <input id="e_p" list="e_l" value="${esc(plato)}"><datalist id="e_l">${S.rep.map(x=>`<option value="${esc(x.n)}">`).join('')}</datalist>
+    <label class="f">Nota (opcional)</label><textarea id="e_n">${esc(nota)}</textarea>
+    <div class="btns"><button onclick="guardarReg('${k}','${sl}')">Guardar</button><button class="sec" onclick="$m('')">Cancelar</button></div></div>`);
+}
+function guardarReg(k,sl){
+  const i=SLOTS.findIndex(x=>x.k===sl),d=parse(k);
+  if(estado(d,i,new Date())!=='pasado'){$m('');render();return;}
+  const ch=document.querySelector('input[name="e_c"]:checked'),comio=ch?ch.value==='1':true;
+  const plato=document.getElementById('e_p').value.trim()||nombrePlan(d,sl)||'(sin detalle)';
+  const nota=document.getElementById('e_n').value.trim();
+  const r=S.reg[k]&&S.reg[k][sl];
+  (S.reg[k]=S.reg[k]||{})[sl]={comio,plato,ts:comio?((r&&r.ts)||Date.now()):null,edit:true,nota};
+  save();$m('');render();
+}
 function cambiar(k,sl,v){(S.over[k]=S.over[k]||{})[sl]=v;save();render();}
 function setPlan(d,sl,v){S.plan[d][sl]=v;save();}
 function regenerar(){if(confirm('¿Rearmar la semana automáticamente con tu repertorio? Se reemplaza el plan semanal actual (los registros no se tocan).')){generar(S);S.over={};save();render();}}
@@ -248,7 +270,7 @@ function cardSlot(d,i,now){
   const hh=`${pad(w.hora.getHours())}:${pad(w.hora.getMinutes())}`;
   let ctrl='';
   if(st==='pasado'){
-    ctrl=rec?`<span class="res ${rec.comio?'ok':'no'}">${rec.comio?'✔ Comió':'✘ No comió'}</span>`:`<span class="pend">Sin comida programada</span>`;
+    ctrl=(rec?`<span class="res ${rec.comio?'ok':'no'}">${rec.comio?'✔ Comió':'✘ No comió'}</span>${rec.edit?' <span class="pend">(editado)</span>':''}`:`<span class="pend">${nombre?'Sin marcar':'Sin comida programada'}</span>`)+` <button class="sec sm" onclick="editarReg('${k}','${s.k}')">Editar</button>`;
   }else if(st==='activo'&&(m||rec)){
     ctrl=`<label class="chk"><input type="checkbox" ${rec&&rec.comio?'checked':''} onchange="marcar('${k}','${s.k}')"> Ha comido</label>`;
   }else if(st==='futuro'){
@@ -259,6 +281,7 @@ function cardSlot(d,i,now){
   return `<div class="card slot ${st==='activo'?'act':''} ${st==='pasado'?'pas':''}">
     <div class="top"><div style="display:flex;gap:10px;align-items:center">${m?thumb(m,60):''}<div><div class="hora">${s.e} ${s.n} · ${hh}</div><div class="nom">${nombre?esc(nombre):'<span class="pend">Sin comida programada</span>'}</div></div></div>${ctrl}</div>
     ${m&&st!=='pasado'?`<div class="mut">${esc(m.i)}</div>`:''}
+    ${rec&&rec.nota?`<div class="mut">📝 ${esc(rec.nota)}</div>`:''}
     ${w2.length?`<div class="warn">⚠ Contiene: ${esc(w2.join(', '))} (alergia/intolerancia anotada)</div>`:''}
     ${sel}</div>`;
 }
@@ -355,10 +378,10 @@ V.registro=function(){
   SLOTS.forEach((s,i)=>{
     const r=S.reg[selDia]&&S.reg[selDia][s.k],st=estado(dd,i,now),n=nombrePlan(dd,s.k);
     let t;
-    if(r)t=`<span class="res ${r.comio?'ok':'no'}">${r.comio?'✔ Comió':'✘ No comió'}</span> · ${esc(r.plato)}`;
+    if(r)t=`<span class="res ${r.comio?'ok':'no'}">${r.comio?'✔ Comió':'✘ No comió'}</span>${r.edit?' <span class="pend">(editado)</span>':''} · ${esc(r.plato)}${r.nota?`<br><span class="mut">📝 ${esc(r.nota)}</span>`:''}`;
     else if(st!=='pasado')t=`<span class="pend">${st==='activo'?'En curso':'Pendiente'} · ${n?esc(n):'sin comida programada'}</span>`;
     else t=`<span class="pend">Sin registro</span>`;
-    h+=`<div style="padding:6px 0;border-top:1px solid var(--line)"><span class="mut">${s.e} ${s.n}</span><br>${t}</div>`;
+    h+=`<div style="padding:6px 0;border-top:1px solid var(--line)"><span class="mut">${s.e} ${s.n}</span><br>${t}${st==='pasado'?` <button class="sec sm" onclick="editarReg('${selDia}','${s.k}')">Editar</button>`:''}</div>`;
   });
   h+=`</div><div class="btns"><button onclick="exportarPDF()">Exportar PDF hasta ahora</button></div>
     <p class="mut">El PDF incluye todos los registros hasta la fecha y hora actuales.</p>`;
@@ -462,7 +485,7 @@ function exportarPDF(){
     SLOTS.forEach((s,i)=>{
       const r=S.reg[k]&&S.reg[k][s.k],w=ventana(d,i);
       const hh=`${pad(w.hora.getHours())}:${pad(w.hora.getMinutes())}`;
-      if(r)filas.push({k,d,s:s.n,hh,pl:r.plato,es:r.comio?'Comió':'No comió',ok:r.comio});
+      if(r)filas.push({k,d,s:s.n,hh,pl:r.plato,es:(r.comio?'Comió':'No comió')+(r.edit?' (editado)':''),ok:r.comio,nota:r.nota});
       else if(k===hk&&estado(d,i,now)==='activo'&&nombrePlan(d,s.k))filas.push({k,d,s:s.n,hh,pl:nombrePlan(d,s.k),es:'En curso (sin marcar)',ok:null});
     });
   });
@@ -482,6 +505,7 @@ function exportarPDF(){
     if(ant&&f.k!==ant)items.push({cols:[],lh:5});
     ant=f.k;
     A([[fechaCorta(f.d),44],[f.s,130],[f.hh,200],[cut(f.pl,44),245],[f.es,455]]);
+    if(f.nota)A([['Nota: '+cut(String(f.nota).replace(/\s+/g,' '),90),245]],{size:8,lh:11});
   });
   bajar('registro-comidas-'+ymd(now)+'.pdf',crearPDF(items));
 }
